@@ -21,55 +21,63 @@ def recognize_intent(observations):
      described in the guidelines), e.g. [[('ONT::STEAL', 'partner', 'store'), ('ONT::TARGET_PRACTICE', 'person', 'gun')]]"""
   
   plan_library = read_plan_library() # Read plan library from files in input/plan_libraries
-  
+
   for tup in observations:
     #(travel partner store)
     ob_1, ob_2, ob_3 = tup
     temp_value = sys.maxsize
-    final_list = []
-    for dict in plan_library:
-      goal = dict['goal']
-      list_as_goal = list(goal)
-      ont_2 = list_as_goal[1][3:]; ont_3 = list_as_goal[2][3:]
-      for element in ont["w::" + ob_2]:  
-        if (element < ont[ont_2] or element == ont[ont_2]):
-          list_as_goal[1] = ob_2
-      for element in ont["w::" + ob_3]:  
-        if (element < ont[ont_3] or element == ont[ont_3]):
-          list_as_goal[2] = ob_3
-      temp_list = []
-      temp_list.append(tuple(list_as_goal))
+    num_of_tuple = len(observations)
+    list_of_library = []
+    for num in range(num_of_tuple):
+      list_of_library.append(copy.deepcopy(plan_library))
 
-      acts = dict['acts']
-      #"(ONT::MOTION ?x:ONT::PERSON ?z:ONT::FACILITY)",
-      for tup_str in acts:  #tup_str is a tuple
-        list_as_tup = list(tup_str)
-        ont_1 = list_as_tup[0];ont_2 = list_as_tup[1];   ont_3 = list_as_tup[2]
-        ont_2 = ont_2[3:]; ont_2_copy = copy.deepcopy(ont_2)    
-        ont_3 = ont_3[3:]; ont_3_copy = copy.deepcopy(ont_3)
-        a = False; b = False
-        #1st check the first ontology
-            #[ont::family-relation] [ont::affiliate]
-        for element in ont["w::" + ob_1]:
-          if (element < ont[ont_1] or element == ont[ont_1]):
-            for element in ont["w::" + ob_2]:  
-              if (element < ont[ont_2] or element == ont[ont_2]):
-                list_as_tup[1] = ob_2
-                a = True
-            for element in ont["w::" + ob_3]:  
-              if (element < ont[ont_3] or element == ont[ont_3]):
-                list_as_tup[2] = ob_3
-                b = True
-        #meaning that there's change been made
-        if a == True and b == True:
-          if temp_list not in final_list:
-            final_list.append(temp_list)
-        tup_str = tuple(list_as_tup)
-        #print(tup_str)
-        # if if_matched(tup, tup_str):
-        #   final_list.append(temp_list)
-        #   break
-        
+    for library in list_of_library:
+      final_list = []
+      for dict in library:
+        goal = dict['goal']
+        list_as_goal = list(goal)
+        ont_2 = list_as_goal[1][3:]; ont_3 = list_as_goal[2][3:]
+        for element in ont["w::" + ob_2]:
+          if (element < ont[ont_2] or element == ont[ont_2]):
+            list_as_goal[1] = ob_2
+        for element in ont["w::" + ob_3]:
+          if (element < ont[ont_3] or element == ont[ont_3]):
+            list_as_goal[2] = ob_3
+        temp_list = []
+        goal = tuple(list_as_goal)
+        temp_list.append(goal)
+        print(goal)
+
+        acts = dict['acts']
+        #"(ONT::MOTION ?x:ONT::PERSON ?z:ONT::FACILITY)",
+        for tup_str in acts:  #tup_str is a tuple
+          list_as_tup = list(tup_str)
+          ont_1 = list_as_tup[0];ont_2 = list_as_tup[1];   ont_3 = list_as_tup[2]
+          ont_2 = ont_2[3:]
+          ont_3 = ont_3[3:]
+          a = False; b = False
+
+          #1st check the first ontology
+          for element in ont["w::" + ob_1]:
+            if (element < ont[ont_1] or element == ont[ont_1]):
+              #if it matches, then we replace
+              for element in ont["w::" + ob_2]:
+                if (element < ont[ont_2] or element == ont[ont_2]):
+                  list_as_tup[1] = ob_2
+                  a = True
+              for element in ont["w::" + ob_3]:
+                if (element < ont[ont_3] or element == ont[ont_3]):
+                  list_as_tup[2] = ob_3
+                  b = True
+          tup_str = tuple(list_as_tup)
+          print(tup_str)
+          #meaning that there's change been made
+          if a == True and b == True:
+            if temp_list not in final_list:
+              final_list.append(temp_list)
+
+        print()
+
   return final_list
 
 def if_matched(tup, tup_str):
