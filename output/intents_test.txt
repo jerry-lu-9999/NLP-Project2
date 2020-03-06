@@ -1,0 +1,6 @@
+(ONT::STEAL partner store)
+(ONT::STEAL friend airport),(ONT::DEPART friend ?y:ONT::COUNTRY)
+(ONT::STEAL mama restaurant),(ONT::BECOME mama ?w:ONT::PROFESSIONAL)
+(ONT::BECOME mama boss)
+((ONT::BECOME pharmacist ?w:ONT::PROFESSIONAL) (ONT::STEAL pharmacist hospital))
+((ONT::STEAL person airport) (ONT::BECOME person ?w:ONT::PROFESSIONAL)),((ONT::DEPART person ?y:ONT::COUNTRY) (ONT::BECOME person ?w:ONT::PROFESSIONAL))

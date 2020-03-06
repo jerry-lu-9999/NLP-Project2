@@ -1,0 +1,6 @@
+(travel partner store)
+(travel friend airport)
+(run mama restaurant)
+(run mama restaurant),(work mama boss)
+(direct pharmacist pharmacy),(drive pharmacist hospital)
+(sleepwalk person airport),(meet person friend)
